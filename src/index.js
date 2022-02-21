@@ -24,10 +24,18 @@ program
 
 program
   .command("gen")
-  .description("generate interface and service functions")
+  .description("generate interface")
   .action(() => {
     const generate = new Generate();
     generate.init();
+  });
+
+program
+  .command("create_entry <name>")
+  .description("generate json data file")
+  .action((name) => {
+    const generate = new Generate();
+    generate.createEntry(name);
   });
 
 // program

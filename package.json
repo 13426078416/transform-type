@@ -4,14 +4,14 @@
   "description": "ts 类型转换",
   "main": "index.js",
   "scripts": {
-    "test": "transform1 transform.config.js",
-    "start": "babel-node src/index.js",
-    "init": "babel-node src/index.js init",
+    "test": "transform transform.config.js",
+    "init": "babel-node dist/index.js init",
     "gen": "babel-node src/index.js gen",
+    "create_entry": "babel-node dist/index.js create_entry test.js",
     "build": "babel ./src/ --ignore node_modules  -d dist --source-maps"
   },
   "bin": {
-    "transform1": "./dist/index.js"
+    "transform": "babel-node dist/index.js"
   },
   "repository": {
     "type": "git",

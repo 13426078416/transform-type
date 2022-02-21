@@ -1,20 +1,15 @@
 import { compile } from "json-schema-to-typescript";
+import jsonSchemaGenerator from "json-schema-generator";
 import { castArray, forOwn, random } from "vtils";
 import prettier from "prettier";
-const defaultPrettierConfig = {
-  parser: "typescript",
-  trailingComma: "all",
-  printWidth: 100,
-  arrowParens: "always",
-  jsxBracketSameLine: false,
-  endOfLine: "lf",
-  proseWrap: "always",
-};
-const JSTTOptions = {
-  bannerComment: "",
-  style: defaultPrettierConfig,
-};
+import path from "path";
+import { defaultPrettierConfig, JSTTOptions } from "../config";
 
+/**
+ * 转为驼峰
+ * @param {*} typeName string
+ * @returns
+ */
 export function getDataTypeName(typeName) {
   const dataTypeName = typeName.replace(/[\-_]([A-z])/g, (_, $1) => {
     return $1.toUpperCase();
@@ -49,10 +44,18 @@ function processJsonSchema(jsonSchema) {
 
   return jsonSchema;
 }
+
+// 格式化jsonSchema
 export function dataTypeGenerator(json) {
   return processJsonSchema(json);
 }
 
+/**
+ * jsonSchema转为type
+ * @param {*} jsonSchema
+ * @param {*} typeName string
+ * @returns
+ */
 export async function jsonSchemaToType(jsonSchema, typeName) {
   if (!jsonSchema || Object.keys(jsonSchema).length === 0) {
     return `export interface ${typeName} {}`;
@@ -61,6 +64,38 @@ export async function jsonSchemaToType(jsonSchema, typeName) {
   const code = await compile(jsonSchema, fakeTypeName, JSTTOptions);
   return code.replace(fakeTypeName, typeName).trim();
 }
+// 美化代码格式
 export function prettierContent(params) {
   return prettier.format(params, defaultPrettierConfig);
+}
+
+/**
+ * 获取文件内容的列表
+ * @param {*} files 读取dir下边的文件列表
+ * @param {*} dir // dir文件目录path
+ * @returns Promise[]
+ */
+export function getDataTypes(files, dir) {
+  const getType = async (jsonSchema, data) => {
+    return new Promise(async (resolve) => {
+      const content = await jsonSchemaToType(jsonSchema, data.typeName);
+      resolve({ ...data, data: content });
+    });
+  };
+  return files.reduce((res, childPath) => {
+    const childFilePath = path.resolve(dir, childPath);
+    const content = require(childFilePath);
+    Object.entries(content).forEach(([key, value]) => {
+      const fileName = childPath.replace(/\.[A-z0-9]+$/, ""); // 去掉文件后缀
+      const typeName = getDataTypeName(key); // 转为驼峰
+      const jsonSchema = dataTypeGenerator(jsonSchemaGenerator(value));
+      res.push(
+        getType(jsonSchema, {
+          fileName,
+          typeName,
+        })
+      );
+    });
+    return res;
+  }, []);
 }
