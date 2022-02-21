@@ -1,0 +1,44 @@
+{
+  "name": "transform-type",
+  "version": "1.0.0",
+  "description": "ts 类型转换",
+  "main": "index.js",
+  "scripts": {
+    "test": "transform1 transform.config.js",
+    "start": "babel-node src/index.js",
+    "init": "babel-node src/index.js init",
+    "gen": "babel-node src/index.js gen",
+    "build": "babel ./src/ --ignore node_modules  -d dist --source-maps"
+  },
+  "bin": {
+    "transform1": "./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/13426078416/transform-type.git"
+  },
+  "author": "jodie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/13426078416/transform-type/issues"
+  },
+  "homepage": "https://github.com/13426078416/transform-type#readme",
+  "dependencies": {
+    "commander": "^9.0.0",
+    "dedent": "^0.7.0",
+    "fs-extra": "^10.0.0",
+    "inquirer": "^8.2.0",
+    "json-schema-generator": "^2.0.6",
+    "json-schema-to-typescript": "^10.1.5",
+    "metalsmith": "^2.4.2",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.5",
+    "vtils": "^4.57.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1"
+  }
+}

@@ -1,0 +1,18 @@
+# https://help.github.com/ignore-files/
+
+# Dependency directories
+/node_modules
+/api
+/dist
+transform.config.js
+
+# Optional npm cache directory
+.npm
+
+
+# Output of 'npm pack'
+*.tgz
+
+# IDE
+.vscode
+.idea
